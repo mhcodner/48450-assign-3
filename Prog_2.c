@@ -1,4 +1,4 @@
-/* 
+/*
 * RTOS Autumn 2019
 * Assignment 3 Program_2 template
 *
@@ -29,47 +29,46 @@ void SignalHandler(int signal);
  @param argv array of values passed to the program.
  @return returns 0 upon completion.
  */
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-	//Register Ctrl+c(SIGINT) signal and call the signal handler for the function.
-	//add your code here
-	
-	int i;
-	// reference number
-	int REFERENCESTRINGLENGTH=24;
-	//Argument from the user on the frame size, such as 4 frames in the document
-	int frameSize = atoi(argv[1]);
-	//Frame where we will be storing the references. -1 is equivalent to an empty value
-	uint frame[REFERENCESTRINGLENGTH];
-	//Reference string from the assignment outline
-	int referenceString[24] = {7,0,1,2,0,3,0,4,2,3,0,3,0,3,2,1,2,0,1,7,0,1,7,5};
-	//Next position to write a new value to.
-	int nextWritePosition = 0;
-	//Boolean value for whether there is a match or not.
-	bool match = false;
-	//Current value of the reference string.
-	int currentValue;
+  //Register Ctrl+c(SIGINT) signal and call the signal handler for the function.
+  //add your code here
 
-	//Initialise the empty frame with -1 to simulate empty values.
-	for(i = 0; i < frameSize; i++)
-	{
-		frame[i] = -1;
-	}
+  int i;
+  // reference number
+  int REFERENCESTRINGLENGTH = 24;
+  //Argument from the user on the frame size, such as 4 frames in the document
+  int frameSize = atoi(argv[1]);
+  //Frame where we will be storing the references. -1 is equivalent to an empty value
+  uint frame[REFERENCESTRINGLENGTH];
+  //Reference string from the assignment outline
+  int referenceString[24] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1, 7, 5};
+  //Next position to write a new value to.
+  int nextWritePosition = 0;
+  //Boolean value for whether there is a match or not.
+  bool match = false;
+  //Current value of the reference string.
+  int currentValue;
 
-	//Loop through the reference string values.
-	for(i = 0; i < REFERENCESTRINGLENGTH; i++)
-	{
-		//add your code here
-		
-	}
+  //Initialise the empty frame with -1 to simulate empty values.
+  for (i = 0; i < frameSize; i++)
+  {
+    frame[i] = -1;
+  }
 
-	//Sit here until the ctrl+c signal is given by the user.
-	while(1)
-	{
-		sleep(1);
-	}
+  //Loop through the reference string values.
+  for (i = 0; i < REFERENCESTRINGLENGTH; i++)
+  {
+    //add your code here
+  }
 
-	return 0;
+  //Sit here until the ctrl+c signal is given by the user.
+  while (1)
+  {
+    sleep(1);
+  }
+
+  return 0;
 }
 
 /**
@@ -79,6 +78,6 @@ int main(int argc, char* argv[])
  */
 void SignalHandler(int signal)
 {
-	printf("\nTotal page faults: %d\n", pageFaults);
-	exit(0);
+  printf("\nTotal page faults: %d\n", pageFaults);
+  exit(0);
 }
