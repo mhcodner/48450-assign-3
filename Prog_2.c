@@ -20,15 +20,16 @@
 #include <sys/stat.h>
 #include <signal.h>
 
-#define LENGTH 20
+#define LENGTH 24
 
 //Number of pagefaults in the program
 int pageFaults = 0;
 //Argument from the user on the frame size, such as 4 frames in the document
 int frameSize;
 
-//Function declaration
+//Function declarations
 void SignalHandler(int signal);
+int IndexOfMax(unsigned int age[]);
 int FrameContains(unsigned int haystack[], int needle);
 void PrintFrame(unsigned int frame[]);
 
@@ -56,25 +57,20 @@ int main(int argc, char *argv[])
 
   //Register Ctrl+c(SIGINT) signal and call the signal handler for the function.
   signal(SIGINT, SignalHandler);
-
-  int i;
+  
   // reference number
+  int i;
 
   //Frame where we will be storing the references. -1 is equivalent to an empty value
   unsigned int frame[frameSize];
   //Reference string from the assignment outline
-  //int referenceString[LENGTH] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1, 7, 5};
-  int referenceString[LENGTH] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1};
+  int referenceString[LENGTH] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1, 7, 5};
   //Next position to write a new value to.
   int nextWritePosition = 0;
-  //Position to compare or write to.
-  int currentPosition = 0;
   //Current value of the reference string.
   int currentValue;
 
-  bool match = false;
-  int index;
-  int previous;
+  unsigned int age[3] = {0, 0, 0};
 
   //Initialise the empty frame with -1 to simulate empty values.
   for (i = 0; i < frameSize; i++)
@@ -87,31 +83,19 @@ int main(int argc, char *argv[])
   {
     currentValue = referenceString[i];
 
-    if ((index = FrameContains(frame, currentValue)) != -1)
+    // We only change the frames if the value isn't already there
+    if ((FrameContains(frame, currentValue)) == -1)
     {
-      nextWritePosition = index;
-      previous = index;
-      currentPosition = nextWritePosition;
+      nextWritePosition = frame[i % frameSize] == -1 ? i % frameSize : IndexOfMax(age);
       frame[nextWritePosition] = currentValue;
-      match = true;
-    }
-    else
-    {
-      if (match)
-      {
-        nextWritePosition = previous;
-        frame[nextWritePosition] = currentValue;
-        currentPosition = (++nextWritePosition % frameSize);
-        match = false;
-      }
-      else
-      {
-        nextWritePosition = currentPosition;
-        currentPosition = (currentPosition + 1) % frameSize;
-        frame[nextWritePosition] = currentValue;
-      }
+      age[nextWritePosition] = 0;
       pageFaults++;
     }
+
+    // Increase age of everything except for empty frames and what we just wrote
+    for (int j = 0; j < frameSize; j++)
+      if (frame[j] != -1 && j != nextWritePosition)
+        age[j]++;
 
     PrintFrame(frame);
   }
@@ -125,6 +109,30 @@ int main(int argc, char *argv[])
   return 0;
 }
 
+/**
+ Returns the index of the highest value in the array
+
+ @param age the array used to store age of frames
+ @return the index of the highest value in the array
+ */
+int IndexOfMax(unsigned int age[])
+{
+  int max = 0;
+
+  for (int i = 0; i < frameSize; i++)
+    if (age[i] > age[max])
+      max = i;
+
+  return max;
+}
+
+/**
+ Checks if the frame contains the value
+
+ @param haystack the array to search through
+ @param needle the value you are searching for
+ @return the index of the value or -1 if it doesn't exist
+ */
 int FrameContains(unsigned int haystack[], int needle)
 {
   for (int i = 0; i < frameSize; i++)
@@ -134,6 +142,11 @@ int FrameContains(unsigned int haystack[], int needle)
   return -1;
 }
 
+/**
+ Prints the frames in its current state
+
+ @param frame the frames to be printed
+ */
 void PrintFrame(unsigned int frame[])
 {
   printf("Current frame state: [");
