@@ -32,7 +32,7 @@ void SignalHandler(int signal);
 int main(int argc, char *argv[])
 {
   //Register Ctrl+c(SIGINT) signal and call the signal handler for the function.
-  //add your code here
+  signal(SIGINT, SignalHandler);
 
   int i;
   // reference number
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
   //Argument from the user on the frame size, such as 4 frames in the document
   int frameSize = atoi(argv[1]);
   //Frame where we will be storing the references. -1 is equivalent to an empty value
-  uint frame[REFERENCESTRINGLENGTH];
+  unsigned int frame[REFERENCESTRINGLENGTH];
   //Reference string from the assignment outline
   int referenceString[24] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1, 7, 5};
   //Next position to write a new value to.
@@ -78,6 +78,9 @@ int main(int argc, char *argv[])
  */
 void SignalHandler(int signal)
 {
-  printf("\nTotal page faults: %d\n", pageFaults);
-  exit(0);
+  if (signal == SIGINT)
+  {
+    printf("\nTotal page faults: %d\n", pageFaults);
+    exit(0);
+  }
 }
