@@ -3,7 +3,7 @@
 * Assignment 3 Program_2
 * For compiling this, no flags are necessary but good to check for warnings
 * e.g.    gcc Prog_2.c -o prog_2 -Wall
-* When executing prog_2, please provide the number of frames for the document as a parameter
+* When executing prog_2, please provide the number of frames as a parameter
 * e.g.    ./prog_2 4
 *
 */
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 {
   if (argc != 2)
   {
-    printf("Please provide 1 argument: the number of frames in the document\n");
+    printf("Please provide 1 argument: the number of frames\n");
     printf("e.g. %s 4\n", argv[0]);
     exit(-1);
   }
@@ -70,7 +70,13 @@ int main(int argc, char *argv[])
   //Current value of the reference string.
   int currentValue;
 
-  unsigned int age[3] = {0, 0, 0};
+  unsigned int age[frameSize];
+
+  //Initialise the empty age with 0
+  for (i = 0; i < frameSize; i++)
+  {
+    age[i] = 0;
+  }
 
   //Initialise the empty frame with -1 to simulate empty values.
   for (i = 0; i < frameSize; i++)
