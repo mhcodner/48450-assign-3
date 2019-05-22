@@ -41,13 +41,7 @@ int main(int argc, char *argv[])
     printf("e.g. %s 4\n", argv[0]);
     exit(-1);
   }
-
-  //Register Ctrl+c(SIGINT) signal and call the signal handler for the function.
-  signal(SIGINT, SignalHandler);
-
-  int i;
-  // reference number
-  int REFERENCESTRINGLENGTH = 24;
+  
   //Argument from the user on the frame size, such as 4 frames in the document
   int frameSize;
   if (!(frameSize = atoi(argv[1])) || frameSize < 0)
@@ -55,6 +49,13 @@ int main(int argc, char *argv[])
     printf("Please provide a valid number greater than 0\n");
     exit(-1);
   }
+
+  //Register Ctrl+c(SIGINT) signal and call the signal handler for the function.
+  signal(SIGINT, SignalHandler);
+
+  int i;
+  // reference number
+  int REFERENCESTRINGLENGTH = 24;
 
   //Frame where we will be storing the references. -1 is equivalent to an empty value
   unsigned int frame[REFERENCESTRINGLENGTH];
