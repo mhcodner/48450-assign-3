@@ -49,7 +49,13 @@ int main(int argc, char *argv[])
   // reference number
   int REFERENCESTRINGLENGTH = 24;
   //Argument from the user on the frame size, such as 4 frames in the document
-  int frameSize = atoi(argv[1]);
+  int frameSize;
+  if (!(frameSize = atoi(argv[1])) || frameSize < 0)
+  {
+    printf("Please provide a valid number greater than 0\n");
+    exit(-1);
+  }
+
   //Frame where we will be storing the references. -1 is equivalent to an empty value
   unsigned int frame[REFERENCESTRINGLENGTH];
   //Reference string from the assignment outline
