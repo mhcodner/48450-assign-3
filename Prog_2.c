@@ -20,11 +20,17 @@
 #include <sys/stat.h>
 #include <signal.h>
 
+#define LENGTH 20
+
 //Number of pagefaults in the program
 int pageFaults = 0;
+//Argument from the user on the frame size, such as 4 frames in the document
+int frameSize;
 
 //Function declaration
 void SignalHandler(int signal);
+int FrameContains(unsigned int haystack[], int needle);
+void PrintFrame(unsigned int frame[]);
 
 /**
  Main routine for the program. In charge of setting up threads and the FIFO.
@@ -41,9 +47,7 @@ int main(int argc, char *argv[])
     printf("e.g. %s 4\n", argv[0]);
     exit(-1);
   }
-  
-  //Argument from the user on the frame size, such as 4 frames in the document
-  int frameSize;
+
   if (!(frameSize = atoi(argv[1])) || frameSize < 0)
   {
     printf("Please provide a valid number greater than 0\n");
@@ -55,18 +59,22 @@ int main(int argc, char *argv[])
 
   int i;
   // reference number
-  int REFERENCESTRINGLENGTH = 24;
 
   //Frame where we will be storing the references. -1 is equivalent to an empty value
-  unsigned int frame[REFERENCESTRINGLENGTH];
+  unsigned int frame[frameSize];
   //Reference string from the assignment outline
-  int referenceString[24] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1, 7, 5};
+  //int referenceString[LENGTH] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1, 7, 5};
+  int referenceString[LENGTH] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1};
   //Next position to write a new value to.
   int nextWritePosition = 0;
-  //Boolean value for whether there is a match or not.
-  bool match = false;
+  //Position to compare or write to.
+  int currentPosition = 0;
   //Current value of the reference string.
   int currentValue;
+
+  bool match = false;
+  int index;
+  int previous;
 
   //Initialise the empty frame with -1 to simulate empty values.
   for (i = 0; i < frameSize; i++)
@@ -75,9 +83,37 @@ int main(int argc, char *argv[])
   }
 
   //Loop through the reference string values.
-  for (i = 0; i < REFERENCESTRINGLENGTH; i++)
+  for (i = 0; i < LENGTH; i++)
   {
-    //add your code here
+    currentValue = referenceString[i];
+
+    if ((index = FrameContains(frame, currentValue)) != -1)
+    {
+      nextWritePosition = index;
+      previous = index;
+      currentPosition = nextWritePosition;
+      frame[nextWritePosition] = currentValue;
+      match = true;
+    }
+    else
+    {
+      if (match)
+      {
+        nextWritePosition = previous;
+        frame[nextWritePosition] = currentValue;
+        currentPosition = (++nextWritePosition % frameSize);
+        match = false;
+      }
+      else
+      {
+        nextWritePosition = currentPosition;
+        currentPosition = (currentPosition + 1) % frameSize;
+        frame[nextWritePosition] = currentValue;
+      }
+      pageFaults++;
+    }
+
+    PrintFrame(frame);
   }
 
   //Sit here until the ctrl+c signal is given by the user.
@@ -87,6 +123,25 @@ int main(int argc, char *argv[])
   }
 
   return 0;
+}
+
+int FrameContains(unsigned int haystack[], int needle)
+{
+  for (int i = 0; i < frameSize; i++)
+    if (haystack[i] == needle)
+      return i;
+
+  return -1;
+}
+
+void PrintFrame(unsigned int frame[])
+{
+  printf("Current frame state: [");
+
+  for (int i = 0; i < frameSize - 1; i++)
+    printf("%d, ", frame[i]);
+
+  printf("%d]\n", frame[frameSize - 1]);
 }
 
 /**
