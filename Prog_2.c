@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 
   //Register Ctrl+c(SIGINT) signal and call the signal handler for the function.
   signal(SIGINT, SignalHandler);
-  
+
   // reference number
   int i;
 
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
     currentValue = referenceString[i];
 
     // We only change the frames if the value isn't already there
-    if ((FrameContains(frame, currentValue)) == -1)
+    if (FrameContains(frame, currentValue) == -1)
     {
       nextWritePosition = frame[i % frameSize] == -1 ? i % frameSize : IndexOfMax(age);
       frame[nextWritePosition] = currentValue;
