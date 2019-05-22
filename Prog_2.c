@@ -9,15 +9,11 @@
 */
 
 #include <stdio.h>
-#include <pthread.h>
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <semaphore.h>
-#include <fcntl.h>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <signal.h>
 
 #define LENGTH 24
