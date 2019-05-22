@@ -22,9 +22,9 @@
 
 #define LENGTH 24
 
-//Number of pagefaults in the program
+// Number of pagefaults in the program
 int pageFaults = 0;
-//Argument from the user on the frame size, such as 4 frames in the document
+// Argument from the user on the frame size, such as 4 frames in the document
 int frameSize;
 
 //Function declarations
@@ -55,36 +55,31 @@ int main(int argc, char *argv[])
     exit(-1);
   }
 
-  //Register Ctrl+c(SIGINT) signal and call the signal handler for the function.
+  // Register Ctrl+c(SIGINT) signal and call the signal handler for the function.
   signal(SIGINT, SignalHandler);
 
   // reference number
   int i;
 
-  //Frame where we will be storing the references. -1 is equivalent to an empty value
+  // Frame where we will be storing the references. -1 is equivalent to an empty value
   unsigned int frame[frameSize];
-  //Reference string from the assignment outline
+  // Reference string from the assignment outline
   int referenceString[LENGTH] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1, 7, 5};
-  //Next position to write a new value to.
+  // Next position to write a new value to.
   int nextWritePosition = 0;
-  //Current value of the reference string.
+  // Current value of the reference string.
   int currentValue;
-
+  // Age of each position in the frame
   unsigned int age[frameSize];
 
-  //Initialise the empty age with 0
+  // Initialise the empty frame and age
   for (i = 0; i < frameSize; i++)
   {
-    age[i] = 0;
+    age[i] = 0;    // Everything is born at some point
+    frame[i] = -1; // -1 means it's empty
   }
 
-  //Initialise the empty frame with -1 to simulate empty values.
-  for (i = 0; i < frameSize; i++)
-  {
-    frame[i] = -1;
-  }
-
-  //Loop through the reference string values.
+  // Loop through the reference string values.
   for (i = 0; i < LENGTH; i++)
   {
     currentValue = referenceString[i];
@@ -106,7 +101,7 @@ int main(int argc, char *argv[])
     PrintFrame(frame);
   }
 
-  //Sit here until the ctrl+c signal is given by the user.
+  // Sit here until the ctrl+c signal is given by the user.
   while (1)
   {
     sleep(1);
