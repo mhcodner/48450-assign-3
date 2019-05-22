@@ -1,6 +1,10 @@
 /*
 * RTOS Autumn 2019
-* Assignment 3 Program_2 template
+* Assignment 3 Program_2
+* For compiling this, no flags are necessary but good to check for warnings
+* e.g.    gcc Prog_2.c -o prog_2 -Wall
+* When executing prog_2, please provide the number of frames for the document as a parameter
+* e.g.    ./prog_2 4
 *
 */
 
@@ -27,10 +31,17 @@ void SignalHandler(int signal);
 
  @param argc Number of arguments passed to the program.
  @param argv array of values passed to the program.
- @return returns 0 upon completion.
+ @return returns 0 upon successful completion, -1 for errors.
  */
 int main(int argc, char *argv[])
 {
+  if (argc != 2)
+  {
+    printf("Please provide 1 argument: the number of frames in the document\n");
+    printf("e.g. %s 4\n", argv[0]);
+    exit(-1);
+  }
+
   //Register Ctrl+c(SIGINT) signal and call the signal handler for the function.
   signal(SIGINT, SignalHandler);
 
